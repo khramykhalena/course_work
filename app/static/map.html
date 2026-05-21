@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Карта нарушений</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <h2>Карта нарушений</h2>
+        <div class="top-links">
+            <a href="/admin" class="admin-login-button" id="adminModeButton">Вход администратора</a>
+        </div>
+
+        <h3>Фильтры</h3>
+        <label>Дата с</label>
+        <input type="date" id="dateFrom">
+        <label>Дата по</label>
+        <input type="date" id="dateTo">
+        <label>Статус</label>
+        <select id="status"><option value="">Все</option></select>
+        <label>Категория</label>
+        <select id="category"><option value="">Все</option></select>
+        <label>Группа объекта</label>
+        <select id="objectGroup"><option value="">Все</option></select>
+        <label>Объект</label>
+        <select id="objectName"><option value="">Все</option></select>
+        <button onclick="loadViolations()">Применить</button>
+        <button class="secondary" onclick="resetFilters()">Сбросить</button>
+
+        <p id="counter"></p>
+        <div class="violation-list" id="violationList"></div>
+    </aside>
+    <main id="map"></main>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/static/map.js"></script>
+</body>
+</html>

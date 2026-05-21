@@ -1,0 +1,182 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #1f2937;
+}
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    width: 360px;
+}
+
+h1, h2, h3 {
+    margin-top: 0;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+button.secondary {
+    background: #6b7280;
+}
+
+.error {
+    color: #dc2626;
+    font-size: 14px;
+}
+
+.success {
+    color: #15803d;
+    font-size: 14px;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    height: 100vh;
+}
+
+.sidebar {
+    background: white;
+    padding: 18px;
+    overflow-y: auto;
+    border-right: 1px solid #e5e7eb;
+}
+
+#map {
+    height: 100vh;
+    width: 100%;
+}
+
+.top-links {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.top-links a {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.violation-list {
+    margin-top: 16px;
+}
+
+.violation-item {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    background: #fafafa;
+}
+
+.violation-item:hover {
+    background: #eff6ff;
+}
+
+.detail-row {
+    margin-bottom: 8px;
+    word-break: break-word;
+}
+
+.detail-row b {
+    display: block;
+    margin-bottom: 2px;
+}
+
+.admin-page {
+    max-width: 760px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+
+.top-links .import-button {
+    background: #2563eb;
+    color: white;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.top-links .import-button:hover {
+    background: #1d4ed8;
+    color: white;
+}
+
+.top-links .admin-login-button {
+    display: inline-block;
+    background: #2563eb;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.top-links .admin-login-button:hover {
+    background: #1d4ed8;
+    color: white;
+}
+
+.button-link {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    background: #2563eb;
+    color: white;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-weight: 700;
+}
+
+.button-link:hover {
+    background: #1d4ed8;
+}
+
+
+.top-links .user-mode-button {
+    background: #6b7280;
+}
+
+.top-links .user-mode-button:hover {
+    background: #4b5563;
+}

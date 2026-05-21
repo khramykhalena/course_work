@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход администратора</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="login-page">
+    <div class="card" id="loginBlock">
+        <h1>Вход администратора</h1>
+        <p>Доступ к импорту данных разрешён только администратору.</p>
+        <input id="username" placeholder="Логин" autocomplete="off">
+        <input id="password" type="password" placeholder="Пароль" autocomplete="new-password">
+        <button onclick="loginAdmin()">Войти</button>
+        <button class="secondary" onclick="goToMap()">Режим пользователя</button>
+        <p class="error" id="loginError"></p>
+    </div>
+
+    <div class="admin-page" id="uploadBlock" style="display:none;">
+        <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:18px;">
+            <div>
+                <h1 style="margin-bottom:6px;">Импорт данных из XLSX</h1>
+                <p style="margin:0;">Выберите файл выгрузки. После успешной загрузки данные на карте будут полностью обновлены.</p>
+            </div>
+            <button class="secondary" onclick="goUserMode()">Режим пользователя</button>
+        </div>
+
+        <input type="file" id="file" accept=".xlsx">
+        <button onclick="uploadFile()">Загрузить файл</button>
+
+        <div id="result"></div>
+    </div>
+
+<script>
+let adminToken = null;
+
+localStorage.removeItem('adminToken');
+sessionStorage.removeItem('adminToken');
+
+function goToMap() {
+    sessionStorage.removeItem('adminMode');
+    sessionStorage.removeItem('adminToken');
+    window.location.href = '/';
+}
+
+function showLoginBlock() {
+    adminToken = null;
+    document.body.classList.add('login-page');
+    document.getElementById('loginBlock').style.display = 'block';
+    document.getElementById('uploadBlock').style.display = 'none';
+    document.getElementById('password').value = '';
+}
+
+function showUploadBlock() {
+    document.body.classList.remove('login-page');
+    document.getElementById('loginBlock').style.display = 'none';
+    document.getElementById('uploadBlock').style.display = 'block';
+}
+
+function goUserMode() {
+    adminToken = null;
+    sessionStorage.removeItem('adminMode');
+    sessionStorage.removeItem('adminToken');
+    window.location.href = '/';
+}
+
+async function loginAdmin() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const error = document.getElementById('loginError');
+    error.textContent = '';
+
+    const response = await fetch('/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password})
+    });
+
+    if (!response.ok) {
+        error.textContent = 'Неверный логин или пароль администратора';
+        return;
+    }
+
+    const data = await response.json();
+    adminToken = data.token;
+    sessionStorage.setItem('adminMode', '1');
+    sessionStorage.setItem('adminToken', adminToken);
+    showUploadBlock();
+}
+
+async function uploadFile() {
+    const input = document.getElementById('file');
+    const result = document.getElementById('result');
+    result.innerHTML = '';
+
+    if (!adminToken) {
+        result.innerHTML = '<p class="error">Сначала выполните вход администратора</p>';
+        showLoginBlock();
+        return;
+    }
+
+    if (!input.files.length) {
+        result.innerHTML = '<p class="error">Выберите XLSX-файл</p>';
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', input.files[0]);
+
+    const response = await fetch('/admin/upload', {
+        method: 'POST',
+        headers: {Authorization: 'Bearer ' + adminToken},
+        body: formData
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+            adminToken = null;
+        }
+        result.innerHTML = '<p class="error">Ошибка: ' + (data.detail || 'не удалось загрузить файл') + '</p>';
+        return;
+    }
+
+    const className = data.ok ? 'success' : 'error';
+    let html = '<h3 class="' + className + '">' + (data.ok ? 'Файл загружен' : 'Файл не загружен') + '</h3>';
+    html += '<p>Загружено строк: <b>' + data.accepted + '</b></p>';
+    html += '<p>Ошибок: <b>' + data.errors_count + '</b></p>';
+
+    if (data.errors && data.errors.length) {
+        html += '<h3>Первые ошибки</h3><ol>';
+        data.errors.forEach(error => html += '<li>' + error + '</li>');
+        html += '</ol>';
+    }
+
+    if (data.ok) {
+        html += '<div style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap;">';
+        html += '<a class="button-link" href="/">Перейти на карту</a>';
+        html += '</div>';
+    }
+
+    result.innerHTML = html;
+}
+</script>
+</body>
+</html>
